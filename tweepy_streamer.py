@@ -10,6 +10,7 @@ from collections import Counter
 from itertools import repeat, chain
 
 import re
+import sys
 
 import pandas as pd
 import numpy as np
@@ -130,19 +131,28 @@ class TweetAnalyzer():
             date = row['date']
 
             finaldate = date
-
+            tweet = tweet.upper()
             tweet = tweet.replace('@','')
             tweet = tweet.replace('RT','')
             tweet = tweet.replace('$CRYPTO','')
             tweet = tweet.replace('$crypto','')
+            tweet = tweet.replace('$ALTS','')
+            tweet = tweet.replace('$alts','')
+            tweet = tweet.replace('.','')
+            tweet = tweet.replace(',','')
+            tweet = tweet.replace('-','')
+            tweet = tweet.replace('?','')
             tweet = re.sub(r'^https?:\/\/.*[\r\n]*', '', tweet, flags=re.MULTILINE)
             tweet = tweet.replace(':','').strip()
 
-            hash_array_mixed = [i  for i in tweet.split() if i.startswith("$") ]
-            hash_array = [x.upper() for x in hash_array_mixed]
+            hash_array_mixed = [i  for i in tweet.split(" ") if i.startswith("$") ]
+            hash_array = [x for x in hash_array_mixed if not any(c.isdigit() for c in x)]
+
             try:
                 hash_array.remove("$CRYPTO")
                 hash_array.remove("$crypto")
+                hash_array.remove("$ALTS")
+                hash_array.remove("$alts")
             except:
                 pass
             #if not empty
@@ -161,8 +171,7 @@ class TweetAnalyzer():
         print("1st: "+str(occurrence_set[0])+"\n"+"Occurrence count: "+str(complete_list.count(occurrence_set[0])))
         print("2nd: "+str(occurrence_set[1])+"\n"+"Occurrence count: "+str(complete_list.count(occurrence_set[1])))
         print("3rd: "+str(occurrence_set[2])+"\n"+"Occurrence count: "+str(complete_list.count(occurrence_set[2])))
-        #most_common_tag = max(complete_list, key = complete_list.count)
-        #occurence_count = complete_list.count(most_common_tag)
+
 
 
 
@@ -175,14 +184,14 @@ class TweetAnalyzer():
 
 if __name__ == "__main__":
 
-    twitter_user_name = "crypjunkie"
+    twitter_user_name = sys.argv[1]
 
     twitter_client = TwitterClient(twitter_user_name)
     tweet_analyzer = TweetAnalyzer()
 
     api = twitter_client.get_twitter_client_api()
 
-    tweets = twitter_client.get_user_timeline_tweets(5000)
+    tweets = twitter_client.get_user_timeline_tweets(7000)
     #tweets = api.user_timeline(screen_name  = "bitcoin_dad", count = 2) #functions from api
 
     #creates data frame ds
