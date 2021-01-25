@@ -15,7 +15,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Twitter Screenshot][product-screenshot]]
+![Twitter Screenshot][product-screenshot]
 
 Twitter bot that finds popular cryptocurrency traders on Twitter, analyzes their tweets and interactions, and predicts the trader’s top three investments. The bot generated an average of 978 impressions per day. 
 
